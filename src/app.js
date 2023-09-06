@@ -26,6 +26,7 @@ db.sync() // si no existe la tabla --> la crea / si ya existe no hace nada
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("OK");
