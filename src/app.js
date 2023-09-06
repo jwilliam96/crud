@@ -24,20 +24,20 @@ db.sync() // si no existe la tabla --> la crea / si ya existe no hace nada
     console.log(error);
   });
 
-// const whitelist = ["localhost:8000", "http://localhost:5173"];
-// const corsOption = {
-//   origin: (origin, cb) => {
-//     if (!whitelist.includes(origin)) {
-//       cb(new Error("not allowed"));
-//     }
-//     cb(null, true);
-//   },
-// };
+const whitelist = ["localhost:8000", "http://localhost:5173"];
+const corsOption = {
+  origin: (origin, cb) => {
+    if (!whitelist.includes(origin)) {
+      cb(new Error("not allowed"));
+    }
+    cb(null, true);
+  },
+};
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOption));
 
 app.get("/", (req, res) => {
   res.send("OK");
