@@ -1,6 +1,7 @@
 import express from "express";
 import db from "./utils/database.js";
 import User from "./models/users.model.js";
+import cors from "cors";
 import "dotenv/config";
 
 User;
@@ -23,6 +24,16 @@ db.sync() // si no existe la tabla --> la crea / si ya existe no hace nada
     console.log(error);
   });
 
+// const whitelist = ["localhost:8000", "http://localhost:5173"];
+// const corsOption = {
+//   origin: (origin, cb) => {
+//     if (!whitelist.includes(origin)) {
+//       cb(new Error("not allowed"));
+//     }
+//     cb(null, true);
+//   },
+// };
+
 const app = express();
 
 app.use(express.json());
@@ -30,21 +41,6 @@ app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("OK");
-});
-
-// CREATE user
-// cuando se haga una request a /users POST crear un usuario
-
-app.post("/users", async (req, res) => {
-  try {
-    const { body } = req;
-    // mandar esta info a la base de datos
-    // * INSERT INTO users (username, email, password)
-    const user = await User.create(body);
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json(error);
-  }
 });
 
 // READ users
@@ -66,6 +62,21 @@ app.get("/users/:id", async (req, res) => {
     const { id } = req.params; // params es un objeto {id: 4}
     const user = await User.findByPk(id);
     res.json(user);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+// CREATE user
+// cuando se haga una request a /users POST crear un usuario
+
+app.post("/users", async (req, res) => {
+  try {
+    const { body } = req;
+    // mandar esta info a la base de datos
+    // * INSERT INTO users (username, email, password)
+    const user = await User.create(body);
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error);
   }
